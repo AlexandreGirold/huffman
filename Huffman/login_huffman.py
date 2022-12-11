@@ -23,39 +23,50 @@ def build_frequency_list(dataIN):
     """
     Builds a tuple list of the character frequencies in the input.
     """
-    L = []
+    freq = []
+    for i in range(len(dataIN)):
+        found = False
+        for j in range(len(freq)):
+            if freq[j][1] == dataIN[i]:
+                freq[j] = (freq[j][0] + 1, freq[j][1])
+                found = True
+        if not found:
+            freq.append((1, dataIN[i]))
+    return freq
 
-    for ele in dataIN:
-        added = False
-        for count, value in enumerate(L):
-            if value[1] == ele:
-                L[count] = (value[0] + 1, value[1])
-                added = True
-                break
-        if not added:
-            L.append((1, ele))
-    return L
-
+L = build_frequency_list("bbaabtttaabtctce")
 
 def __sort_by_freq(tupl_list):
-    l = len(tupl_list)
-    for i in range(l):
-        for j in range(l-1):
-            t1 = tupl_list[j]
-            t2 = tupl_list[j+1]
-            if t1[0] > t2[0]:
-                tupl_list[j + 1], tupl_list[j] = tupl_list[j], tupl_list[j + 1]
+    """
+    Sorts the list of tuples by frequency, from biggest to smallest.
+    """
+    for i in range(1, len(tupl_list)):
+        j = i
+        while j > 0 and tupl_list[j][0] > tupl_list[j-1][0]:
+            tupl_list[j], tupl_list[j-1] = tupl_list[j-1], tupl_list[j]
+            j -= 1
+    return tupl_list
+        
 
-
-
-print(__sort_by_freq(build_frequency_list("aaenaaddde") ))
+#print(__sort_by_freq(build_frequency_list("dddfgdfgf")))
 
 def build_Huffman_tree(inputList):
     """
-    Processes the frequency list into a Huffman tree according to the algorithm.
+    Build a heap by iterating over the list stating at the end of the list.
     """
-    # FIXME
-    pass
+    H = heap.Heap()
+    for el in inputList:
+        H.push((el[0], bintree.BinTree(el[1], None, None)))
+    return H
+
+HT = build_Huffman_tree(L)
+
+def prettyprint(HT):
+    """
+    Prints the huffman tree as a pretty string.
+    """
+    
+        
 
 
 def encode_data(huffmanTree, dataIN):
