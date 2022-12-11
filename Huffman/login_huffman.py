@@ -34,7 +34,7 @@ def build_frequency_list(dataIN):
             freq.append((1, dataIN[i]))
     return freq
 
-L = build_frequency_list("bbaabtttaabtctce")
+# L = build_frequency_list("bbaabtttaabtctce")
 
 def __sort_by_freq(tupl_list):
     """
@@ -64,7 +64,7 @@ def build_Huffman_tree(inputList):
         H.push((c1 + c2, ht))
     return H.pop()[1]    
 
-HT = build_Huffman_tree(L)
+# HT = build_Huffman_tree(L)
 
 def __prettyprint(HT):
     """
@@ -100,7 +100,7 @@ def encode_data(huffmanTree, dataIN):
         final += __encode_data(huffmanTree, "", elem)
     return final
     
-encode_data(HT, 'bbaabtttaabtctce')
+# encode_data(HT, 'bbaabtttaabtctce')
 
 def __ascii_to_binary (data):
     """
@@ -148,27 +148,56 @@ def encode_tree(huffmanTree): #Working
         return "0" + encode_tree(huffmanTree.left) + encode_tree(huffmanTree.right)
     
     
-print(encode_tree(HT))
-print(len(encode_tree(HT)))
-print(len('0010111010010110001001011000010101100011101100101'))
+# print(encode_tree(HT))
+# print(len(encode_tree(HT)))
+# print(len('0010111010010110001001011000010101100011101100101'))
 
 def to_binary(dataIN):
     """
     Compresses a string containing binary code to its real binary value.
+    This code must return a tuple containing the binary string and the number of bits to ignore.
     """
-    # FIXME
-    pass
+    char, list, bits = '', [], 0
+    for element in dataIN:
+        char += element
+        bits += 1
+        if bits == 8:
+            list.append(__binary_to_asccii(char))
+            char = ''
+            bits = 0
+    reste = 8 - bits
+    if reste == 8:
+        reste = 0
+    if bits != 0:
+        while bits < 8:
+            char = "0" + char
+            bits += 1
+        list.append(__binary_to_asccii(char))
+    
+    res = ""
+    for el in list:
+        res += el
+    return (res, reste)
+            
+  
+#print(to_binary('01011010010000001010010011000110111'))
 
 
-def compress(dataIn):
+def compress(dataIn): #Not the same result as the example
     """
     The main function that makes the whole compression process.
     """
-    
-    # FIXME
-    pass
+    frequencies = build_frequency_list(dataIn)
+    huffmanTree = build_Huffman_tree(frequencies)
+    encoded = encode_data(huffmanTree, dataIn)
+    encodedTree = encode_tree(huffmanTree)
+    binData = to_binary(encodedTree)
+    binTree = to_binary(encoded)
 
-    
+    return binTree, binData
+
+#print(compress('bbaabtttaabtctce'))
+
 ################################################################################
 ## DECOMPRESSION
 
