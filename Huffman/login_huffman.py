@@ -52,29 +52,75 @@ def __sort_by_freq(tupl_list):
 
 def build_Huffman_tree(inputList):
     """
-    Build a heap by iterating over the list stating at the end of the list.
+    Processes the frequency list into a Huffman tree according to the algorithm.
     """
     H = heap.Heap()
     for el in inputList:
         H.push((el[0], bintree.BinTree(el[1], None, None)))
-    return H
+    while len(H.elts) > 2:
+        (c1, t1) = H.pop()
+        (c2, t2) = H.pop()
+        ht = bintree.BinTree(None, t1, t2)
+        H.push((c1 + c2, ht))
+    return H.pop()[1]    
 
 HT = build_Huffman_tree(L)
 
-def prettyprint(HT):
+def __prettyprint(HT):
     """
     Prints the huffman tree as a pretty string.
     """
+    # FIXME
+    pass
     
         
+
+def __encode_data(huffmanTree, dataIN, elem):
+    """
+    Encodes the input string to its binary string representation.
+    Recursively goes through the tree.
+    """
+    if huffmanTree.left is None and huffmanTree.right is None:
+        if huffmanTree.key == elem:
+            return dataIN
+        else:
+            return ""
+    else:
+        return (__encode_data(huffmanTree.left, dataIN + "0", elem)
+                or __encode_data(huffmanTree.right, dataIN + "1", elem))
+
 
 
 def encode_data(huffmanTree, dataIN):
     """
     Encodes the input string to its binary string representation.
     """
-    # FIXME
-    pass
+    final = ""
+    for elem in dataIN:
+        final += __encode_data(huffmanTree, "", elem)
+    return final
+    
+encode_data(HT, 'bbaabtttaabtctce')
+
+def __ascii_to_binary (data):
+    """
+        Encodes a ascii character into its binary representation. On 8 bits.
+    """
+    binary = ""
+    for i in range(8):
+        binary = str(data % 2) + binary
+        data = data // 2
+    return binary
+
+
+def __binary_to_asccii (data):
+    """
+        Decodes a binary string into its int representation.
+    """
+    int_ = 0
+    for i in range(len(data)):
+        int_ = int_ * 2 + int(data[i])
+    return chr(int_)
 
 
 def encode_tree(huffmanTree):
@@ -83,9 +129,28 @@ def encode_tree(huffmanTree):
         * each leaf key is encoded into its binary representation on 8 bits preceded by '1'
         * each time we go left we add a '0' to the result
     """
-    # FIXME
-    pass
-
+    """
+    
+    if huffmanTree.left == None:
+        if huffmanTree.right == None:
+            return __ascii_to_binary(ord(huffmanTree.key))
+        else:
+            return "1" + encode_tree(huffmanTree.right)
+    else:
+        if huffmanTree.right == None:
+            return "0" + encode_tree(huffmanTree.left)
+        else:
+            return "1" + encode_tree(huffmanTree.left) + "0" + encode_tree(huffmanTree.right)
+    """   
+    if huffmanTree.left == None and huffmanTree.right == None:
+        return "1" + __ascii_to_binary(ord(huffmanTree.key))
+    else:
+        return "0" + encode_tree(huffmanTree.left) + encode_tree(huffmanTree.right)
+    
+    
+print(encode_tree(HT))
+print(len(encode_tree(HT)))
+print(len('0010111010010110001001011000010101100011101100101'))
 
 def to_binary(dataIN):
     """
