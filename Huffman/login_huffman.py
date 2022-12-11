@@ -123,7 +123,7 @@ def __binary_to_asccii (data):
     return chr(int_)
 
 
-def encode_tree(huffmanTree):
+def encode_tree(huffmanTree): #not sure if working
     """
     Encodes a huffman tree to its binary representation using a preOrder traversal:
         * each leaf key is encoded into its binary representation on 8 bits preceded by '1'
