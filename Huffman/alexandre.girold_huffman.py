@@ -207,7 +207,6 @@ def decode_data(huffmanTree, dataIN):
     """
     # FIXME
     pass
-
     
 def decode_tree(dataIN):
     """
@@ -217,6 +216,7 @@ def decode_tree(dataIN):
     """
     # FIXME
     pass
+    
 
 
 def from_binary(dataIN, align):
